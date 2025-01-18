@@ -1,0 +1,22 @@
+export const prompts = [
+    "LILY, Close-up portrait of a Russian blonde supermodel in a mysterious misty forest, wearing a velvet cloak with intricate embroidery, soft light on her face.",
+    "LILY, Side profile of a Russian blonde supermodel in an elegant ballroom, wearing a sparkling evening gown, chandeliers shimmering in the background.",
+    "LILY, Action shot of a Russian blonde supermodel running through a vibrant Moroccan market, colorful stalls and textiles surrounding her.",
+    "LILY, Full-body shot of a Russian blonde supermodel lounging on a luxurious yacht, clear blue waters and a sunny sky in the background, wearing a chic swimsuit and sunglasses.",
+    "LILY, Dramatic low-angle shot of a Russian blonde supermodel standing atop a skyscraper, city skyline glowing at sunset, wearing a futuristic jumpsuit.",
+    "LILY, Over-the-shoulder shot of a Russian blonde supermodel gazing out of a train window, rustic countryside passing by, dressed in a cozy autumn coat and scarf.",
+    "LILY, Full-body shot of a Russian blonde supermodel practicing yoga on a cliffside, ocean waves crashing below, wearing athletic wear and a serene expression.",
+    "LILY, Close-up of a Russian blonde supermodel laughing with a vibrant flower garden in the background, sunlight softly illuminating her face, wearing a casual summer dress.",
+    "LILY, Overhead view of a Russian blonde supermodel walking through a bustling street in Tokyo at night, neon signs reflecting on the wet pavement, wearing a sleek trench coat.",
+    "LILY, Mid-action shot of a Russian blonde supermodel dancing on a cobblestone street, Parisian cafes and Eiffel Tower in the background, wearing a vintage-inspired dress.",
+    "LILY, Wide-angle shot of a Russian blonde supermodel climbing a rugged mountain trail, dramatic clouds and peaks in the distance, wearing outdoor gear and a determined expression.",
+    "LILY, Candid shot of a Russian blonde supermodel sipping tea by a cozy fireplace, wearing a soft knitted sweater and socks, with books and blankets nearby.",
+    "LILY, Profile shot of a Russian blonde supermodel standing under a vibrant red maple tree in autumn, golden leaves scattered on the ground, wearing a trench coat and boots.",
+    "LILY, Full-body shot of a Russian blonde supermodel riding a horse through a scenic meadow, wildflowers and a mountain range in the background, wearing equestrian attire.",
+    "LILY, Over-the-shoulder shot of a Russian blonde supermodel walking through an ancient Greek temple, marble columns towering around her, wearing a flowing toga-inspired dress.",
+    "LILY, Close-up shot of a Russian blonde supermodel holding an umbrella in the rain, city lights reflecting in the puddles, wearing a stylish raincoat and boots.",
+    "LILY, Artistic shot of a Russian blonde supermodel standing in a minimalist gallery, surrounded by abstract sculptures, wearing a sleek monochrome outfit.",
+    "LILY, Full-body shot of a Russian blonde supermodel playing an acoustic guitar on a sandy beach, waves and a bonfire in the background, wearing casual bohemian clothing.",
+    "LILY, Candid shot of a Russian blonde supermodel laughing on a ferris wheel at an amusement park, colorful lights glowing around her, wearing a cheerful summer outfit.",
+    "LILY, Dramatic shot of a Russian blonde supermodel posing in front of an ancient castle at sunrise, fog rolling in the background, wearing a regal medieval gown."
+];

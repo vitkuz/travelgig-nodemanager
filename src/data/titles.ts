@@ -1,0 +1,22 @@
+export const titles = [
+  "Product Overview",
+  "Feature Highlights",
+  "Technical Specifications",
+  "User Benefits",
+  "Getting Started Guide",
+  "Installation Steps",
+  "Troubleshooting Tips",
+  "Best Practices",
+  "Case Studies",
+  "Customer Reviews",
+  "Pricing Details",
+  "Comparison Chart",
+  "Integration Guide",
+  "Security Features",
+  "Performance Metrics",
+  "System Requirements",
+  "API Documentation",
+  "Release Notes",
+  "FAQs",
+  "Support Resources"
+];
