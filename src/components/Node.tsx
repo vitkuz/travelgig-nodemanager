@@ -63,11 +63,10 @@ export function Node({ node, index, onEdit, onDelete, editNode, pageId, readOnly
     };
 
     return (
-        <Card className={classNames('h-100', {
+        <Card className={classNames('h-100 shadow-sm', {
             'border-success': node.predictionStatus === PredictionStatus.SUCCEEDED,
             'border-primary': node.predictionStatus === PredictionStatus.STARTING,
-            'border-danger': node.predictionStatus === PredictionStatus.FAILED,
-            'shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1': true
+            'border-danger': node.predictionStatus === PredictionStatus.FAILED
         })}>
             <Card.Header className="d-flex justify-content-between align-items-center bg-white border-0 pt-3 px-3">
         <span className="position-absolute top-0 start-0 mt-2 ms-2">
@@ -117,26 +116,7 @@ export function Node({ node, index, onEdit, onDelete, editNode, pageId, readOnly
                             <Sparkles size={16} className="text-success" />
                         )}
                     </Card.Title>
-                    <div className="d-flex align-items-center gap-2 text-muted small">
-                        <Info size={12} />
-                        <span>ID: {node.id}</span>
-                    </div>
-                    {(node.createdAt || node.updatedAt) && (
-                        <div className="mt-2 d-flex flex-column gap-1">
-                            {node.createdAt && (
-                                <small className="d-flex align-items-center gap-1 text-muted">
-                                    <Clock size={12} />
-                                    Created: {new Date(node.createdAt).toLocaleString()}
-                                </small>
-                            )}
-                            {node.updatedAt && node.updatedAt !== node.createdAt && (
-                                <small className="d-flex align-items-center gap-1 text-muted">
-                                    <Clock size={12} />
-                                    Updated: {new Date(node.updatedAt).toLocaleString()}
-                                </small>
-                            )}
-                        </div>
-                    )}
+
                 </div>
 
                 <div className="mb-3">
@@ -220,14 +200,12 @@ export function Node({ node, index, onEdit, onDelete, editNode, pageId, readOnly
                                 href={url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className={classNames('block transition-all hover:opacity-90', {
-                                    'col-span-2': node.generatedImages?.length === 1
-                                })}
+                                className="d-block"
                             >
                                 <LazyImage
                                     src={url}
                                     alt={`Generated ${index + 1}`}
-                                    className="w-full h-auto rounded hover:opacity-90 transition-opacity"
+                                    className="w-100 h-auto rounded"
                                 />
                             </a>
                         ))}
@@ -247,6 +225,27 @@ export function Node({ node, index, onEdit, onDelete, editNode, pageId, readOnly
                 {JSON.stringify(response, null, 2)}
               </pre>
                         </div>
+                    </div>
+                )}
+
+                <div className="d-flex align-items-center gap-2 text-muted small">
+                    <Info size={12} />
+                    <span>ID: {node.id}</span>
+                </div>
+                {(node.createdAt || node.updatedAt) && (
+                    <div className="mt-2 d-flex flex-column gap-1">
+                        {node.createdAt && (
+                            <small className="d-flex align-items-center gap-1 text-muted">
+                                <Clock size={12} />
+                                Created: {new Date(node.createdAt).toLocaleString()}
+                            </small>
+                        )}
+                        {node.updatedAt && node.updatedAt !== node.createdAt && (
+                            <small className="d-flex align-items-center gap-1 text-muted">
+                                <Clock size={12} />
+                                Updated: {new Date(node.updatedAt).toLocaleString()}
+                            </small>
+                        )}
                     </div>
                 )}
             </Card.Body>

@@ -67,7 +67,7 @@ export function HomePage() {
                     {pages.map(page => {
                         return (
                             <Col key={page.id} md={4} className="mb-4">
-                                <Card className="h-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                                <Card className="h-100 shadow-sm">
                                     <Card.Body className="d-flex flex-column">
                                         <div className="d-flex justify-content-between align-items-start mb-3">
                                             <div>
@@ -92,7 +92,8 @@ export function HomePage() {
                                         <Button
                                             onClick={() => navigate(`/page/${page.id}`)}
                                             className={classNames(
-                                                "d-flex align-items-center gap-2 btn btn-primary",
+                                                "d-flex align-items-center gap-2",
+                                                "btn btn-primary"
                                             )}
                                         >
                                             Open Page

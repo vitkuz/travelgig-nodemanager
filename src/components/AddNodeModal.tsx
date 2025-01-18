@@ -67,15 +67,7 @@ export function AddNodeModal({ show, onClose, pageId, editingNode, onCloseEdit }
       setIsSubmitting(true);
 
       if (editingNode) {
-        console.log('Editing existing node:', {
-          nodeId: editingNode.id,
-          currentValues: editingNode,
-          newValues: {
-            title: data.title.trim(),
-            description: data.description.trim(),
-            prompt: data.prompt.trim() || undefined,
-          }
-        });
+        console.log('Editing existing node:', editingNode);
 
         await editNode(pageId, editingNode.id, {
           id: editingNode.id,
@@ -83,6 +75,8 @@ export function AddNodeModal({ show, onClose, pageId, editingNode, onCloseEdit }
           title: data.title.trim(),
           description: data.description.trim(),
           prompt: data.prompt.trim() || undefined,
+          time: data.time,
+          narration: data.time,
         });
         console.log('Node updated successfully');
         onCloseEdit();

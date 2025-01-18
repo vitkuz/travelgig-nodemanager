@@ -18,7 +18,7 @@ function App() {
   return (
       <PageProvider>
         <BrowserRouter>
-          <div className="min-h-screen bg-light">
+          <div className="vh-100 bg-light">
             {!isPublicRoute && <Navigation />}
             <Routes>
               <Route path="/" element={<Navigate to="/home" replace />} />

@@ -10,6 +10,7 @@ import { GenerateNodesModal } from './GenerateNodesModal';
 import { Plus, Share2, Globe, Trash2, Wand2, SortAsc, SortDesc, FileJson } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
+import { updatePageInArray } from '../utils/merge';
 
 export function PageView() {
   const [showAddNode, setShowAddNode] = useState(false);
@@ -36,11 +37,8 @@ export function PageView() {
         setError(null);
         const nodes = await api.getNodes(page.id);
 
-        // Update the page with loaded nodes
-        // todo: replace  with util
-        setPages(prevPages => prevPages.map(p =>
-            p.id === page.id ? { ...p, nodes } : p
-        ));
+        // Use utility function to update page with loaded nodes
+        setPages(prevPages => updatePageInArray(prevPages, page.id, { nodes }));
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Failed to load nodes';
         setError(message);
@@ -193,7 +191,6 @@ export function PageView() {
                               onDelete={handleDelete}
                               editNode={editNode}
                               pageId={page.id}
-                              isGeneratingImage={false}
                           />
                         </Col>
                     ))}

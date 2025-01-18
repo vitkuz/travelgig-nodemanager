@@ -36,24 +36,30 @@ export function PageProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     websocketService.connect();
     const removeHandler = websocketService.addMessageHandler(async (message) => {
-      console.log(message)
-      const updatedNode = message;
-      // @ts-ignore
+      const updatedNode = message as unknown as Node;
       const updatedPageId = updatedNode.pageId;
-      // @ts-ignore
       const updatedNodeId = updatedNode.id;
 
-      setPages(prev => updateNodeInPages(prev, updatedPageId, updatedNodeId, updatedNode));
+      try {
+        // Fetch the latest node data from the server
+        const latestNode = await api.getNodes(updatedPageId);
+        const updatedNodeData = latestNode.find(node => node.id === updatedNodeId);
 
+        if (updatedNodeData) {
+          setPages(prev => updateNodeInPages(prev, updatedPageId, updatedNodeId, updatedNodeData));
+        }
+      } catch (error) {
+        console.error('Error fetching updated node:', error);
+      }
     });
 
     return () => {
       removeHandler();
     };
-  }, [pages]);
+  }, []);
 
   // Load pages on mount
-  React.useEffect(() => {
+  useEffect(() => {
     const loadPages = async () => {
       try {
         setIsLoading(true);
@@ -118,6 +124,7 @@ export function PageProvider({ children }: { children: ReactNode }) {
       id: uuidv4(),
       title,
       description,
+      time: 0,
       pageId,
       prompt
     };
@@ -172,10 +179,17 @@ export function PageProvider({ children }: { children: ReactNode }) {
         throw new Error('Node not found');
       }
 
+      console.log({
+        currentNode,
+        updates
+      })
+
       // Merge current state with updates
       const mergedNode = {
         ...currentNode,
-        ...updates
+        ...updates,
+        time: updates.time || currentNode.time,
+        narration: updates.narration || currentNode.narration
       };
 
       const updatedNode = await api.updateNode(pageId, nodeId, mergedNode);
