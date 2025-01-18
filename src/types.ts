@@ -24,4 +24,6 @@ export interface Node {
   generatedImages?: string[];
   predictionId?: string;
   predictionStatus?: PredictionStatus;
+  createdAt?: string;
+  updatedAt?: string;
 }

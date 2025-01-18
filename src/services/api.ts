@@ -56,7 +56,9 @@ const transformNodeData = (nodeData: any): Node => {
     prompt: nodeData.prompt,
     generatedImages: nodeData.generatedImages,
     predictionId: nodeData.predictionId,
-    predictionStatus: nodeData.predictionStatus
+    predictionStatus: nodeData.predictionStatus,
+    createdAt: nodeData.createdAt,
+    updatedAt: nodeData.updatedAt
   };
 };
 

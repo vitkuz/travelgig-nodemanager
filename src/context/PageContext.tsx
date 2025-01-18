@@ -34,8 +34,6 @@ export function PageProvider({ children }: { children: ReactNode }) {
   // Connect to WebSocket on mount
   useEffect(() => {
     websocketService.connect();
-
-    // WebSocket message handler
     const removeHandler = websocketService.addMessageHandler(async (message) => {
       console.log(message)
       const updatedNode = message;
@@ -61,10 +59,8 @@ export function PageProvider({ children }: { children: ReactNode }) {
 
     });
 
-    // Cleanup WebSocket connection and handlers
     return () => {
       removeHandler();
-      websocketService.disconnect();
     };
   }, [pages]);
 
@@ -118,11 +114,11 @@ export function PageProvider({ children }: { children: ReactNode }) {
       });
 
       setPages(prev =>
-        prev.map(p =>
-          p.id === pageId
-            ? { ...p, isPublished: updatedPage.isPublished, title: updatedPage.title }
-            : p
-        )
+          prev.map(p =>
+              p.id === pageId
+                  ? { ...p, isPublished: updatedPage.isPublished, title: updatedPage.title }
+                  : p
+          )
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to toggle publish status';
@@ -145,11 +141,11 @@ export function PageProvider({ children }: { children: ReactNode }) {
       const createdNode = await api.createNode(pageId, newNode);
 
       setPages(prev =>
-        prev.map(page =>
-          page.id === pageId
-            ? { ...page, nodes: [...page.nodes, createdNode] }
-            : page
-        )
+          prev.map(page =>
+              page.id === pageId
+                  ? { ...page, nodes: [...page.nodes, createdNode] }
+                  : page
+          )
       );
 
       return createdNode;
@@ -166,11 +162,11 @@ export function PageProvider({ children }: { children: ReactNode }) {
       await api.deleteNode(pageId, nodeId);
 
       setPages(prev =>
-        prev.map(page =>
-          page.id === pageId
-            ? { ...page, nodes: page.nodes.filter(node => node.id !== nodeId) }
-            : page
-        )
+          prev.map(page =>
+              page.id === pageId
+                  ? { ...page, nodes: page.nodes.filter(node => node.id !== nodeId) }
+                  : page
+          )
       );
       setError(null);
     } catch (error) {
@@ -212,16 +208,16 @@ export function PageProvider({ children }: { children: ReactNode }) {
       const updatedNode = await api.updateNode(pageId, nodeId, mergedNode);
 
       setPages(prev =>
-        prev.map(p =>
-          p.id === pageId
-            ? {
-                ...p,
-                nodes: p.nodes.map(node =>
-                  node.id === nodeId ? { ...node, ...updatedNode } : node
-                )
-              }
-            : p
-        )
+          prev.map(p =>
+              p.id === pageId
+                  ? {
+                    ...p,
+                    nodes: p.nodes.map(node =>
+                        node.id === nodeId ? { ...node, ...updatedNode } : node
+                    )
+                  }
+                  : p
+          )
       );
       setError(null);
       return updatedNode;
@@ -234,24 +230,24 @@ export function PageProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <PageContext.Provider
-      value={{
-        pages,
-        isLoading,
-        error,
-        currentPage,
-        addPage,
-        setCurrentPage,
-        deletePage,
-        addNode,
-        togglePublish,
-        deleteNode,
-        editNode,
-        setPages,
-      }}
-    >
-      {children}
-    </PageContext.Provider>
+      <PageContext.Provider
+          value={{
+            pages,
+            isLoading,
+            error,
+            currentPage,
+            addPage,
+            setCurrentPage,
+            deletePage,
+            addNode,
+            togglePublish,
+            deleteNode,
+            editNode,
+            setPages,
+          }}
+      >
+        {children}
+      </PageContext.Provider>
   );
 }
 
