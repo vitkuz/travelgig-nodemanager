@@ -21,6 +21,7 @@ export interface Node {
   description: string;
   pageId: string;
   prompt?: string;
+  time?: number;
   generatedImages?: string[];
   narration?: string;
   predictionId?: string;

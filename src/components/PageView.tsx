@@ -37,6 +37,7 @@ export function PageView() {
         const nodes = await api.getNodes(page.id);
 
         // Update the page with loaded nodes
+        // todo: replace  with util
         setPages(prevPages => prevPages.map(p =>
             p.id === page.id ? { ...p, nodes } : p
         ));
@@ -80,41 +81,45 @@ export function PageView() {
       <div>
         <Navbar bg="light" expand="lg">
           <Container>
-            <Navbar.Brand className="d-flex flex-column flex-grow-1">
-              {page.title}
-              <small className="ms-2 text-muted">ID: {page.id}</small>
-              {page.isPublished && (
-                  <span className="ms-2 badge bg-success">Published</span>
-              )}
-            </Navbar.Brand>
-            <div className="d-flex flex-wrap gap-2 justify-content-end">
+            <div className="text-center w-100 p-2">
+              <h1 className="mb-1">
+                {page.title}
+              </h1>
+              <div className="d-flex align-items-center justify-content-center gap-2">
+                <small className="text-muted">ID: {page.id}</small>
+                {page.isPublished && (
+                    <span className="badge bg-success">Published</span>
+                )}
+              </div>
+            </div>
+            <div className="d-flex flex-wrap justify-content-center gap-2">
               <Button
                   variant={page.isPublished ? "success" : "outline-success"}
                   onClick={() => togglePublish(page.id)}
-                  className="d-flex align-items-center gap-1 order-1"
+                  className="d-flex align-items-center gap-1"
                   size="sm"
               >
                 <Globe size={16} />
                 <span className="d-none d-sm-inline">
-                {page.isPublished ? 'Published' : 'Publish'}
-              </span>
+                  {page.isPublished ? 'Published' : 'Publish'}
+                </span>
               </Button>
               <Button
                   variant="outline-secondary"
                   onClick={() => setSortAscending(!sortAscending)}
-                  className="d-flex align-items-center gap-1 order-3"
+                  className="d-flex align-items-center gap-1"
                   size="sm"
                   title={sortAscending ? "Showing oldest first" : "Showing newest first"}
               >
                 {sortAscending ? <SortAsc size={16} /> : <SortDesc size={16} />}
                 <span className="d-none d-sm-inline">
-                {sortAscending ? 'Oldest First' : 'Newest First'}
-              </span>
+                  {sortAscending ? 'Oldest First' : 'Newest First'}
+                </span>
               </Button>
               <Button
                   variant="outline-primary"
                   onClick={() => setShowShareModal(true)}
-                  className="d-flex align-items-center gap-1 order-4"
+                  className="d-flex align-items-center gap-1"
                   size="sm"
               >
                 <Share2 size={16} />
@@ -123,7 +128,7 @@ export function PageView() {
               <Button
                   variant="outline-danger"
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="d-flex align-items-center gap-1 order-5"
+                  className="d-flex align-items-center gap-1"
                   size="sm"
               >
                 <Trash2 size={16} />
@@ -132,7 +137,7 @@ export function PageView() {
               <Button
                   variant="outline-primary"
                   onClick={() => setShowGenerateNodes(true)}
-                  className="d-flex align-items-center gap-1 order-2"
+                  className="d-flex align-items-center gap-1"
                   size="sm"
               >
                 <Wand2 size={16} />
@@ -141,7 +146,7 @@ export function PageView() {
               <Button
                   variant="outline-primary"
                   onClick={() => setShowImportScenario(true)}
-                  className="d-flex align-items-center gap-1 order-2"
+                  className="d-flex align-items-center gap-1"
                   size="sm"
               >
                 <FileJson size={16} />
@@ -150,7 +155,7 @@ export function PageView() {
               <Button
                   variant="primary"
                   onClick={() => setShowAddNode(true)}
-                  className="d-flex align-items-center gap-1 order-0"
+                  className="d-flex align-items-center gap-1"
                   size="sm"
               >
                 <Plus size={16} />
@@ -188,6 +193,7 @@ export function PageView() {
                               onDelete={handleDelete}
                               editNode={editNode}
                               pageId={page.id}
+                              isGeneratingImage={false}
                           />
                         </Col>
                     ))}

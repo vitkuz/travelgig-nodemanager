@@ -11,6 +11,7 @@ import { Shuffle, Type, FileText } from 'lucide-react';
 interface FormInputs {
   title: string;
   description: string;
+  time: number;
   narration: string;
   prompt: string;
 }
@@ -190,6 +191,22 @@ export function AddNodeModal({ show, onClose, pageId, editingNode, onCloseEdit }
               <Form.Control.Feedback type="invalid">
                 {errors.description?.message}
               </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Scene Duration (seconds)</Form.Label>
+              <Form.Control
+                  type="number"
+                  min="0"
+                  step="1"
+                  {...register("time", {
+                    min: { value: 0, message: "Duration cannot be negative" },
+                    valueAsNumber: true
+                  })}
+                  placeholder="Enter duration in seconds"
+              />
+              <Form.Text className="text-muted">
+                Specify how long this scene should last in seconds
+              </Form.Text>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Narration</Form.Label>

@@ -2,24 +2,12 @@ import React from 'react';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { usePages } from '../context/PageContext';
-import { Layout, Globe, Clock, FileText, Plus, ArrowRight, Image } from 'lucide-react';
+import { Layout, Globe, Clock, Plus, ArrowRight } from 'lucide-react';
 import classNames from 'classnames';
 
 export function HomePage() {
     const { pages, isLoading } = usePages();
     const navigate = useNavigate();
-
-    const getPageStats = (pageId: string) => {
-        const page = pages.find(p => p.id === pageId);
-        if (!page) return { total: 0, withImages: 0 };
-
-        return {
-            total: page.nodes.length,
-            withImages: page.nodes.filter(node =>
-                node.generatedImages && node.generatedImages.length > 0
-            ).length
-        };
-    };
 
     if (isLoading) {
         return (
@@ -77,7 +65,6 @@ export function HomePage() {
             ) : (
                 <Row>
                     {pages.map(page => {
-                        const stats = getPageStats(page.id);
                         return (
                             <Col key={page.id} md={4} className="mb-4">
                                 <Card className="h-100 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
@@ -95,23 +82,6 @@ export function HomePage() {
                                             )}
                                         </div>
 
-                                        <div className="d-flex flex-wrap gap-3 mb-4">
-                                            <div className="bg-light rounded p-2 flex-grow-1">
-                                                <div className="d-flex align-items-center gap-2 text-primary mb-1">
-                                                    <FileText size={16} />
-                                                    <strong>Nodes</strong>
-                                                </div>
-                                                <div className="text-muted">{stats.total} total</div>
-                                            </div>
-                                            <div className="bg-light rounded p-2 flex-grow-1">
-                                                <div className="d-flex align-items-center gap-2 text-primary mb-1">
-                                                    <Image size={16} />
-                                                    <strong>Images</strong>
-                                                </div>
-                                                <div className="text-muted">{stats.withImages} generated</div>
-                                            </div>
-                                        </div>
-
                                         {page.createdAt && (
                                             <div className="text-muted small mb-3 mt-auto d-flex align-items-center gap-1">
                                                 <Clock size={14} />
@@ -120,12 +90,9 @@ export function HomePage() {
                                         )}
 
                                         <Button
-                                            variant="primary"
                                             onClick={() => navigate(`/page/${page.id}`)}
                                             className={classNames(
-                                                "w-100 d-flex align-items-center justify-content-center gap-2",
-                                                "bg-opacity-10 text-primary border-primary",
-                                                "hover:bg-primary hover:text-white transition-colors"
+                                                "d-flex align-items-center gap-2 btn btn-primary",
                                             )}
                                         >
                                             Open Page
