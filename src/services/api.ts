@@ -154,7 +154,7 @@ export const api = {
     }
   },
 
-  createNode: async (pageId: string, node: Omit<Node, 'pageId'>): Promise<Node> => {
+  createNode: async (pageId: string, node: Node): Promise<Node> => {
     const endpoint = `/pages/${pageId}/nodes`;
     logApiCall('POST', endpoint, node);
     try {
@@ -182,16 +182,7 @@ export const api = {
   updateNode: async (pageId: string, nodeId: string, updates: Partial<Node>): Promise<Node> => {
     const endpoint = `/pages/${pageId}/nodes/${nodeId}`;
     const data = {
-      id: updates.id || nodeId,
-      pageId,
-      title: updates.title,
-      description: updates.description,
-      time: updates.time,
-      prompt: updates.prompt,
-      narration: updates.narration,
-      generatedImages: updates.generatedImages || [],
-      predictionId: updates.predictionId,
-      predictionStatus: updates.predictionStatus
+      ...updates
     };
     logApiCall('PUT', endpoint, data);
     try {

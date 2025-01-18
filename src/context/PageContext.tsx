@@ -13,7 +13,7 @@ interface PageContextType {
   currentPage: Page | null;
   addPage: (title: string) => Promise<Page>;
   setCurrentPage: (page: Page | null) => void;
-  addNode: (pageId: string, title: string, description: string, prompt?: string) => void;
+  addNode: (pageId: string, node: Node) => Promise<Node>;
   deletePage: (pageId: string) => Promise<void>;
   togglePublish: (pageId: string) => void;
   setPages: React.Dispatch<React.SetStateAction<Page[]>>;
@@ -119,16 +119,11 @@ export function PageProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const addNode = async (pageId: string, title: string, description: string, prompt?: string) => {
+  const addNode = async (pageId: string, node: Node) => {
     const newNode: Node = {
+      ...node,
       id: uuidv4(),
-      title,
-      description,
-      time: 0,
-      pageId,
-      prompt
     };
-
     try {
       const createdNode = await api.createNode(pageId, newNode);
 
@@ -178,11 +173,6 @@ export function PageProvider({ children }: { children: ReactNode }) {
       if (!currentNode) {
         throw new Error('Node not found');
       }
-
-      console.log({
-        currentNode,
-        updates
-      })
 
       // Merge current state with updates
       const mergedNode = {

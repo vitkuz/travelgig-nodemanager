@@ -7,6 +7,21 @@ import { titles } from '../data/titles';
 import { descriptions } from '../data/descriptions';
 import { prompts } from '../data/prompts';
 
+// Helper function to generate random time between 3 and 15 seconds
+const getRandomTime = () => Math.floor(Math.random() * (15 - 3 + 1)) + 3;
+
+// Helper function to generate random narration
+const generateNarration = (description: string) => {
+    const intros = [
+        "In this scene, ",
+        "Here we see ",
+        "Now we explore ",
+        "Let's focus on ",
+        "Moving forward, "
+    ];
+    return `${getRandomItem(intros)}${description.toLowerCase()}`;
+};
+
 interface GenerateNodesModalProps {
     show: boolean;
     onClose: () => void;
@@ -22,11 +37,20 @@ export function GenerateNodesModal({ show, onClose, pageId }: GenerateNodesModal
         setIsGenerating(true);
         try {
             for (let i = 0; i < quantity; i++) {
+                const description = getRandomItem(descriptions);
+                const newNode = {
+                    id: crypto.randomUUID(),
+                    title: getRandomItem(titles),
+                    description,
+                    pageId,
+                    prompt: getRandomItem(prompts),
+                    time: getRandomTime(),
+                    narration: generateNarration(description)
+                };
+
                 await addNode(
                     pageId,
-                    getRandomItem(titles),
-                    getRandomItem(descriptions),
-                    getRandomItem(prompts)
+                    newNode
                 );
             }
             onClose();

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { FileJson, AlertCircle } from 'lucide-react';
 import { usePages } from '../context/PageContext';
@@ -57,9 +57,7 @@ export function ImportScenarioModal({ show, onClose, pageId }: ImportScenarioMod
             for (const node of nodes) {
                 await addNode(
                     pageId,
-                    node.title,
-                    node.description,
-                    node.prompt
+                    node
                 );
             }
             setJsonInput('');

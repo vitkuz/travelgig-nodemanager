@@ -8,24 +8,16 @@ import { titles } from '../data/titles';
 import { getRandomItem } from '../utils/array';
 import { Shuffle, Type, FileText } from 'lucide-react';
 
-interface FormInputs {
-  title: string;
-  description: string;
-  time: number;
-  narration: string;
-  prompt: string;
-}
-
 interface AddNodeModalProps {
   show: boolean;
   onClose: () => void;
   pageId: string;
-  editingNode: { id: string; title: string; description: string; prompt?: string } | null;
+  editingNode: Node | null;
   onCloseEdit: () => void;
 }
 
 export function AddNodeModal({ show, onClose, pageId, editingNode, onCloseEdit }: AddNodeModalProps) {
-  const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm<FormInputs>();
+  const { register, handleSubmit, reset, formState: { errors }, setValue } = useForm<Node>();
   const { addNode, editNode } = usePages();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -47,42 +39,33 @@ export function AddNodeModal({ show, onClose, pageId, editingNode, onCloseEdit }
 
   React.useEffect(() => {
     if (editingNode) {
-      setValue('title', editingNode.title);
-      setValue('description', editingNode.description);
+      setValue('title', editingNode.title || '');
+      setValue('description', editingNode.description || '');
       setValue('prompt', editingNode.prompt || '');
+      setValue('time', editingNode.prompt || 0);
+      setValue('narration', editingNode.narration || '');
+      // todo: sett all fields
     }
   }, [editingNode, setValue]);
 
-  const onSubmit = async (data: FormInputs) => {
+  const onSubmit = async (data: Node) => {
     console.group('AddNodeModal - Form Submission');
-    console.log('Form Data:', {
-      id: editingNode?.id,
-      title: data.title,
-      description: data.description,
-      prompt: data.prompt,
-      pageId
-    });
-
     try {
       setIsSubmitting(true);
 
       if (editingNode) {
         console.log('Editing existing node:', editingNode);
 
-        await editNode(pageId, editingNode.id, {
-          id: editingNode.id,
+        editNode(pageId, editingNode.id, {
           ...editingNode,
-          title: data.title.trim(),
-          description: data.description.trim(),
-          prompt: data.prompt.trim() || undefined,
-          time: data.time,
-          narration: data.time,
+          ...data,
+          id: editingNode.id,
         });
         console.log('Node updated successfully');
         onCloseEdit();
       } else {
         console.log('Creating new node');
-        await addNode(pageId, data.title.trim(), data.description.trim(), data.prompt.trim());
+        await addNode(pageId, data);
         console.log('Node created successfully');
         onClose();
       }
