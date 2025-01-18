@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { Page, Node } from '../types';
 import { api } from '../services/api';
+import { updateNodeInPages, addNodeToPage, removeNodeFromPage, updatePageInArray } from '../utils/merge';
 import { websocketService } from '../services/websocket.ts';
 
 interface PageContextType {
@@ -42,20 +43,7 @@ export function PageProvider({ children }: { children: ReactNode }) {
       // @ts-ignore
       const updatedNodeId = updatedNode.id;
 
-      console.log(pages, updatedPageId, updatedNodeId)
-
-      setPages(prev =>
-          prev.map(p =>
-              p.id === updatedPageId
-                  ? {
-                    ...p,
-                    nodes: p.nodes.map(node =>
-                        node.id === updatedNodeId ? { ...node, ...updatedNode } : node
-                    )
-                  }
-                  : p
-          )
-      );
+      setPages(prev => updateNodeInPages(prev, updatedPageId, updatedNodeId, updatedNode));
 
     });
 
@@ -93,7 +81,7 @@ export function PageProvider({ children }: { children: ReactNode }) {
 
     try {
       const createdPage = await api.createPage(newPage);
-      setPages((prev) => [...prev, { ...createdPage, nodes: [] }]);
+      setPages(prev => [...prev, { ...createdPage, nodes: [] }]);
       return createdPage;
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to create page';
@@ -113,13 +101,10 @@ export function PageProvider({ children }: { children: ReactNode }) {
         isPublished: !page.isPublished
       });
 
-      setPages(prev =>
-          prev.map(p =>
-              p.id === pageId
-                  ? { ...p, isPublished: updatedPage.isPublished, title: updatedPage.title }
-                  : p
-          )
-      );
+      setPages(prev => updatePageInArray(prev, pageId, {
+        isPublished: updatedPage.isPublished,
+        title: updatedPage.title
+      }));
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to toggle publish status';
       setError(message);
@@ -140,13 +125,7 @@ export function PageProvider({ children }: { children: ReactNode }) {
     try {
       const createdNode = await api.createNode(pageId, newNode);
 
-      setPages(prev =>
-          prev.map(page =>
-              page.id === pageId
-                  ? { ...page, nodes: [...page.nodes, createdNode] }
-                  : page
-          )
-      );
+      setPages(prev => addNodeToPage(prev, pageId, createdNode));
 
       return createdNode;
     } catch (error) {
@@ -161,13 +140,7 @@ export function PageProvider({ children }: { children: ReactNode }) {
     try {
       await api.deleteNode(pageId, nodeId);
 
-      setPages(prev =>
-          prev.map(page =>
-              page.id === pageId
-                  ? { ...page, nodes: page.nodes.filter(node => node.id !== nodeId) }
-                  : page
-          )
-      );
+      setPages(prev => removeNodeFromPage(prev, pageId, nodeId));
       setError(null);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to delete node';
@@ -207,18 +180,7 @@ export function PageProvider({ children }: { children: ReactNode }) {
 
       const updatedNode = await api.updateNode(pageId, nodeId, mergedNode);
 
-      setPages(prev =>
-          prev.map(p =>
-              p.id === pageId
-                  ? {
-                    ...p,
-                    nodes: p.nodes.map(node =>
-                        node.id === nodeId ? { ...node, ...updatedNode } : node
-                    )
-                  }
-                  : p
-          )
-      );
+      setPages(prev => updateNodeInPages(prev, pageId, nodeId, updatedNode));
       setError(null);
       return updatedNode;
     } catch (error) {

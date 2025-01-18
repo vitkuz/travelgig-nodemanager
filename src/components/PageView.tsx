@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Navbar, Container, Button, Row, Col, Card, ButtonGroup, Modal } from 'react-bootstrap';
+import { Navbar, Container, Button, Row, Col, Modal } from 'react-bootstrap';
 import { usePages } from '../context/PageContext';
 import { Node } from './Node';
 import { AddNodeModal } from './AddNodeModal';
@@ -188,7 +188,6 @@ export function PageView() {
                               onEdit={setEditingNode}
                               onDelete={handleDelete}
                               editNode={editNode}
-                              isGeneratingImage={generatingImages[node.id]}
                               pageId={page.id}
                           />
                         </Col>

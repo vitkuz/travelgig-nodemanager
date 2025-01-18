@@ -64,6 +64,7 @@ export function Navigation() {
               <Button
                   variant="light"
                   onClick={() => setShowAddPage(true)}
+                  data-add-page
                   className="d-flex align-items-center gap-1"
                   disabled={isLoading}
               >

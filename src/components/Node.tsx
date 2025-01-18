@@ -5,7 +5,6 @@ import { Pencil, Trash2, Image, Clock, Info, MessageSquare, Sparkles } from 'luc
 import { Image as LazyImage } from './Image';
 import { Node as NodeType, PredictionStatus } from '../types';
 import { replicateService } from '../services/replicate';
-// import { usePolling } from '../hooks/usePolling';
 
 interface ReplicateResponse {
   predictionId: string;
@@ -19,61 +18,17 @@ interface NodeProps {
   onEdit: (node: NodeType) => void;
   onDelete: (nodeId: string) => void;
   editNode: (pageId: string, nodeId: string, node: Partial<NodeType>) => void;
-  isGeneratingImage: boolean;
   pageId: string;
   readOnly?: boolean;
 }
 
-export function Node({ node, index, onEdit, onDelete, editNode, isGeneratingImage, pageId, readOnly }: NodeProps) {
+export function Node({ node, index, onEdit, onDelete, editNode, pageId, readOnly }: NodeProps) {
   const [response, setResponse] = React.useState<ReplicateResponse | null>(null);
-  // const { startPolling, isPolling } = usePolling();
-  // const [isUpdating, setIsUpdating] = React.useState(false);
 
   const isPolling = node.predictionStatus === 'starting';
 
-  React.useEffect(() => {
-    // Only start polling if we have a predictionId and status is not succeeded
-    // if (node.predictionId && node.predictionStatus !== PredictionStatus.SUCCEEDED) {
-    //   startPolling(node.predictionId, {
-    //     onSuccess: async (pollResponse) => {
-    //       setResponse({
-    //         predictionId: node.predictionId!,
-    //         status: pollResponse.status,
-    //         output: pollResponse.output
-    //       });
-    //
-    //       try {
-    //         setIsUpdating(true);
-    //         editNode(pageId, node.id, {
-    //           generatedImages: [...(node.generatedImages || []), ...pollResponse.output],
-    //           predictionStatus: pollResponse.status
-    //         });
-    //       } catch (error) {
-    //         console.error('Error updating node:', error);
-    //       } finally {
-    //         setIsUpdating(false);
-    //       }
-    //     },
-    //     onError: async (error) => {
-    //       console.error('Polling error:', error);
-    //       try {
-    //         setIsUpdating(true);
-    //         editNode(pageId, node.id, {
-    //           predictionStatus: PredictionStatus.FAILED
-    //         });
-    //       } catch (error) {
-    //         console.error('Error updating node status:', error);
-    //       } finally {
-    //         setIsUpdating(false);
-    //       }
-    //     }
-    //   });
-    // }
-  }, [node.predictionId, node.predictionStatus]);
-
   const handleGenerateImage = async () => {
     try {
-      // setResponse({ predictionId: '', status: PredictionStatus.STARTING, output: [] });
       const response = await replicateService.generateImage({
         prompt: node.prompt || `${node.prompt}`,
         numOutputs: 4
@@ -92,51 +47,6 @@ export function Node({ node, index, onEdit, onDelete, editNode, isGeneratingImag
         predictionStatus: status
       });
 
-      // Start polling if we have a prediction ID
-      // if (id) {
-      //   startPolling(id, {
-      //     onSuccess: async (pollResponse) => {
-      //       setResponse({
-      //         predictionId: id,
-      //         status: pollResponse.status,
-      //         output: pollResponse.output,
-      //       });
-      //
-      //       try {
-      //         setIsUpdating(true);
-      //         editNode(pageId, node.id, {
-      //           generatedImages: [...(node.generatedImages || []), ...pollResponse.output],
-      //           predictionStatus: pollResponse.status
-      //         });
-      //       } catch (error) {
-      //         console.error('Error updating node:', error);
-      //       } finally {
-      //         setIsUpdating(false);
-      //       }
-      //     },
-      //     onError: (error) => {
-      //       console.error('Polling error:', error);
-      //       setResponse(prev => prev ? {
-      //         ...prev,
-      //         status: 'failed'
-      //       } : null);
-      //     }
-      //   });
-      // }
-
-      // if (response.output) {
-      //   try {
-      //     setIsUpdating(true);
-      //     editNode(pageId, node.id, {
-      //       generatedImages: [...(node.generatedImages || []), ...response.output],
-      //       predictionStatus: response.status
-      //     });
-      //   } catch (error) {
-      //     console.error('Error updating node:', error);
-      //   } finally {
-      //     setIsUpdating(false);
-      //   }
-      // }
     } catch (error) {
       console.error('Error generating image:', error);
     }
@@ -290,13 +200,6 @@ export function Node({ node, index, onEdit, onDelete, editNode, isGeneratingImag
                   <pre className="m-0" style={{ fontSize: '0.8rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word', overflow: 'auto' }}>
                 {JSON.stringify(response, null, 2)}
               </pre>
-                </div>
-              </div>
-          )}
-          {isGeneratingImage && (
-              <div className="text-center">
-                <div className="spinner-border text-primary" role="status">
-                  <span className="visually-hidden">Generating...</span>
                 </div>
               </div>
           )}
