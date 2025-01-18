@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Button, Card } from 'react-bootstrap';
-import { Pencil, Trash2, Image, Clock, Info, MessageSquare, Sparkles } from 'lucide-react';
+import { Pencil, Trash2, Image, Clock, Info, MessageSquare, Sparkles, Volume2 } from 'lucide-react';
 import { Image as LazyImage } from './Image';
 import { Node as NodeType, PredictionStatus } from '../types';
 import { replicateService } from '../services/replicate';
@@ -29,6 +29,7 @@ export function Node({ node, index, onEdit, onDelete, editNode, pageId, readOnly
 
   const handleGenerateImage = async () => {
     try {
+      // setResponse({ predictionId: '', status: PredictionStatus.STARTING, output: [] });
       const response = await replicateService.generateImage({
         prompt: node.prompt || `${node.prompt}`,
         numOutputs: 4
@@ -129,12 +130,24 @@ export function Node({ node, index, onEdit, onDelete, editNode, pageId, readOnly
             )}
           </div>
 
-          <Card.Text className="mb-0">
+          <div className="mb-3">
             <div className="d-flex align-items-start gap-2">
               <MessageSquare size={16} className="text-muted flex-shrink-0 mt-1" />
               <span>{node.description}</span>
             </div>
-          </Card.Text>
+          </div>
+
+          {node.narration && (
+              <div className="bg-light rounded p-3 mb-3">
+                <div className="d-flex align-items-start gap-2">
+                  <Volume2 size={16} className="text-primary flex-shrink-0 mt-1" />
+                  <div>
+                    <div className="text-primary fw-medium mb-1">Narration</div>
+                    <div className="text-muted small">{node.narration}</div>
+                  </div>
+                </div>
+              </div>
+          )}
 
           {node.prompt && (
               <div className="bg-light rounded p-3">

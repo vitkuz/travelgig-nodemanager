@@ -20,7 +20,6 @@ export function PageView() {
   const [isLoadingNodes, setIsLoadingNodes] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingNode, setEditingNode] = useState<{ id: string; title: string; description: string } | null>(null);
-  const [generatingImages, setGeneratingImages] = useState<{ [key: string]: boolean }>({});
   const [sortAscending, setSortAscending] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { pages, deleteNode, editNode, togglePublish, deletePage, setPages } = usePages();

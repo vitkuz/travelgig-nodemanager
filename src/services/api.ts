@@ -53,6 +53,7 @@ const transformNodeData = (nodeData: any): Node => {
     title: nodeData.title,
     description: nodeData.description,
     pageId: nodeData.pageId,
+    narration: nodeData.narration,
     prompt: nodeData.prompt,
     generatedImages: nodeData.generatedImages,
     predictionId: nodeData.predictionId,
@@ -185,6 +186,7 @@ export const api = {
       title: updates.title,
       description: updates.description,
       prompt: updates.prompt,
+      narration: updates.narration,
       generatedImages: updates.generatedImages || [],
       predictionId: updates.predictionId,
       predictionStatus: updates.predictionStatus

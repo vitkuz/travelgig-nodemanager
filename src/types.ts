@@ -22,6 +22,7 @@ export interface Node {
   pageId: string;
   prompt?: string;
   generatedImages?: string[];
+  narration?: string;
   predictionId?: string;
   predictionStatus?: PredictionStatus;
   createdAt?: string;
