@@ -9,10 +9,11 @@ CLOUDFRONT_DISTRIBUTION_ID='E51NT90OQPLI4'
 echo "Building the application..."
 npm run build
 
-# Sync the build directory with the S3 bucket
-echo "Syncing files to S3..."
+# Sync the build directory with the S3 bucket, excluding images folder
+echo "Syncing files to S3 (preserving images)..."
 aws s3 sync $BUILD_DIR s3://$BUCKET_NAME \
   --delete \
+  --exclude "images/*" \
   --cache-control "public, max-age=31536000" \
   --exclude "index.html"
 
@@ -24,8 +25,11 @@ aws s3 cp "$BUILD_DIR/index.html" "s3://$BUCKET_NAME/index.html" \
 # Invalidate CloudFront cache
 echo "Invalidating CloudFront cache..."
 aws cloudfront create-invalidation \
-  --distribution-id $CLOUDFRONT_DISTRIBUTION_ID \
-  --paths "/*"
+  --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+  --paths "/*" \
+  --no-cli-pager
 
-echo "Deployment to S3 bucket $BUCKET_NAME completed successfully."
-echo "CloudFront cache invalidation initiated."
+echo "✨ Deployment completed successfully!"
+echo "📦 Files synced to S3 bucket: $BUCKET_NAME"
+echo "🖼️  Images folder preserved"
+echo "🔄 CloudFront cache invalidation initiated"

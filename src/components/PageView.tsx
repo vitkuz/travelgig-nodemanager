@@ -5,8 +5,9 @@ import { usePages } from '../context/PageContext';
 import { Node } from './Node';
 import { AddNodeModal } from './AddNodeModal';
 import { SharePageModal } from './SharePageModal';
+import { ImportScenarioModal } from './ImportScenarioModal';
 import { GenerateNodesModal } from './GenerateNodesModal';
-import { Plus, Share2, Globe, Trash2, Wand2, SortAsc, SortDesc } from 'lucide-react';
+import { Plus, Share2, Globe, Trash2, Wand2, SortAsc, SortDesc, FileJson } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
@@ -15,6 +16,7 @@ export function PageView() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showGenerateNodes, setShowGenerateNodes] = useState(false);
+  const [showImportScenario, setShowImportScenario] = useState(false);
   const [isLoadingNodes, setIsLoadingNodes] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingNode, setEditingNode] = useState<{ id: string; title: string; description: string } | null>(null);
@@ -138,6 +140,15 @@ export function PageView() {
                 <span className="d-none d-sm-inline">Generate</span>
               </Button>
               <Button
+                  variant="outline-primary"
+                  onClick={() => setShowImportScenario(true)}
+                  className="d-flex align-items-center gap-1 order-2"
+                  size="sm"
+              >
+                <FileJson size={16} />
+                <span className="d-none d-sm-inline">Import</span>
+              </Button>
+              <Button
                   variant="primary"
                   onClick={() => setShowAddNode(true)}
                   className="d-flex align-items-center gap-1 order-0"
@@ -201,6 +212,11 @@ export function PageView() {
         <GenerateNodesModal
             show={showGenerateNodes}
             onClose={() => setShowGenerateNodes(false)}
+            pageId={page.id}
+        />
+        <ImportScenarioModal
+            show={showImportScenario}
+            onClose={() => setShowImportScenario(false)}
             pageId={page.id}
         />
         <Modal show={showDeleteConfirm} onHide={() => setShowDeleteConfirm(false)} centered>
