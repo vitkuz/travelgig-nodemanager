@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Navbar, Container, Button, Row, Col, ButtonGroup, Modal } from 'react-bootstrap';
+import { Navbar, Container, Button, Row, Col, Card, ButtonGroup, Modal } from 'react-bootstrap';
 import { usePages } from '../context/PageContext';
 import { Node } from './Node';
 import { AddNodeModal } from './AddNodeModal';
 import { SharePageModal } from './SharePageModal';
 import { GenerateNodesModal } from './GenerateNodesModal';
-import { Plus, Share2, Globe, Trash2, Wand2 } from 'lucide-react';
+import { Plus, Share2, Globe, Trash2, Wand2, SortAsc, SortDesc } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
 
@@ -18,7 +18,8 @@ export function PageView() {
   const [isLoadingNodes, setIsLoadingNodes] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingNode, setEditingNode] = useState<{ id: string; title: string; description: string } | null>(null);
-  const [generatingImages] = useState<{ [key: string]: boolean }>({});
+  const [generatingImages, setGeneratingImages] = useState<{ [key: string]: boolean }>({});
+  const [sortAscending, setSortAscending] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { pages, deleteNode, editNode, togglePublish, deletePage, setPages } = usePages();
   const navigate = useNavigate();
@@ -78,55 +79,74 @@ export function PageView() {
       <div>
         <Navbar bg="light" expand="lg">
           <Container>
-            <Navbar.Brand>
+            <Navbar.Brand className="d-flex flex-column flex-grow-1">
               {page.title}
               <small className="ms-2 text-muted">ID: {page.id}</small>
               {page.isPublished && (
                   <span className="ms-2 badge bg-success">Published</span>
               )}
             </Navbar.Brand>
-            <ButtonGroup>
+            <div className="d-flex flex-wrap gap-2 justify-content-end">
               <Button
                   variant={page.isPublished ? "success" : "outline-success"}
                   onClick={() => togglePublish(page.id)}
-                  className="d-flex align-items-center gap-1"
+                  className="d-flex align-items-center gap-1 order-1"
+                  size="sm"
               >
                 <Globe size={16} />
+                <span className="d-none d-sm-inline">
                 {page.isPublished ? 'Published' : 'Publish'}
+              </span>
+              </Button>
+              <Button
+                  variant="outline-secondary"
+                  onClick={() => setSortAscending(!sortAscending)}
+                  className="d-flex align-items-center gap-1 order-3"
+                  size="sm"
+                  title={sortAscending ? "Showing oldest first" : "Showing newest first"}
+              >
+                {sortAscending ? <SortAsc size={16} /> : <SortDesc size={16} />}
+                <span className="d-none d-sm-inline">
+                {sortAscending ? 'Oldest First' : 'Newest First'}
+              </span>
               </Button>
               <Button
                   variant="outline-primary"
                   onClick={() => setShowShareModal(true)}
-                  className="d-flex align-items-center gap-1"
+                  className="d-flex align-items-center gap-1 order-4"
+                  size="sm"
               >
                 <Share2 size={16} />
-                Share
+                <span className="d-none d-sm-inline">Share</span>
               </Button>
               <Button
                   variant="outline-danger"
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="d-flex align-items-center gap-1"
+                  className="d-flex align-items-center gap-1 order-5"
+                  size="sm"
               >
                 <Trash2 size={16} />
-                Delete Page
+                <span className="d-none d-sm-inline">Delete Page</span>
               </Button>
               <Button
                   variant="outline-primary"
                   onClick={() => setShowGenerateNodes(true)}
-                  className="d-flex align-items-center gap-1"
+                  className="d-flex align-items-center gap-1 order-2"
+                  size="sm"
               >
                 <Wand2 size={16} />
-                Generate Nodes
+                <span className="d-none d-sm-inline">Generate</span>
               </Button>
               <Button
                   variant="primary"
                   onClick={() => setShowAddNode(true)}
-                  className="d-flex align-items-center gap-1"
+                  className="d-flex align-items-center gap-1 order-0"
+                  size="sm"
               >
                 <Plus size={16} />
-                Add Node
+                <span className="d-none d-sm-inline">Add Node</span>
               </Button>
-            </ButtonGroup>
+            </div>
           </Container>
         </Navbar>
         <Container className="mt-4">
@@ -143,19 +163,25 @@ export function PageView() {
               </div>
           ) : (
               <Row>
-                {page.nodes.map((node) => (
-                    <Col key={node.id} md={4} className="mb-4">
-                      <Node
-                          index={page.nodes.indexOf(node)}
-                          node={node}
-                          onEdit={setEditingNode}
-                          onDelete={handleDelete}
-                          editNode={editNode}
-                          isGeneratingImage={generatingImages[node.id]}
-                          pageId={page.id}
-                      />
-                    </Col>
-                ))}
+                {[...page.nodes]
+                    .sort((a, b) => {
+                      const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                      const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                      return sortAscending ? dateA - dateB : dateB - dateA;
+                    })
+                    .map((node) => (
+                        <Col key={node.id} md={4} className="mb-4">
+                          <Node
+                              index={page.nodes.indexOf(node)}
+                              node={node}
+                              onEdit={setEditingNode}
+                              onDelete={handleDelete}
+                              editNode={editNode}
+                              isGeneratingImage={generatingImages[node.id]}
+                              pageId={page.id}
+                          />
+                        </Col>
+                    ))}
               </Row>
           )}
         </Container>
