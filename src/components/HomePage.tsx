@@ -32,14 +32,6 @@ export function HomePage() {
                         Manage your pages and nodes efficiently
                     </p>
                 </div>
-                <Button
-                    variant="primary"
-                    onClick={() => document.querySelector<HTMLButtonElement>('[data-add-page]')?.click()}
-                    className="d-flex align-items-center gap-2"
-                >
-                    <Plus size={16} />
-                    Create New Page
-                </Button>
             </div>
 
             {pages.length === 0 ? (

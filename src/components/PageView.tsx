@@ -5,6 +5,7 @@ import { usePages } from '../context/PageContext';
 import { Node } from './Node';
 import { AddNodeModal } from './AddNodeModal';
 import { SharePageModal } from './SharePageModal';
+import { DeleteNodeModal } from './DeleteNodeModal';
 import { ImportScenarioModal } from './ImportScenarioModal';
 import { GenerateNodesModal } from './GenerateNodesModal';
 import { Plus, Share2, Globe, Trash2, Wand2, SortAsc, SortDesc, FileJson } from 'lucide-react';
@@ -18,12 +19,13 @@ export function PageView() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showGenerateNodes, setShowGenerateNodes] = useState(false);
   const [showImportScenario, setShowImportScenario] = useState(false);
+  const [nodeToDelete, setNodeToDelete] = useState<Node | null>(null);
   const [isLoadingNodes, setIsLoadingNodes] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [editingNode, setEditingNode] = useState<{ id: string; title: string; description: string } | null>(null);
   const [sortAscending, setSortAscending] = useState(false);
   const { id } = useParams<{ id: string }>();
-  const { pages, deleteNode, editNode, togglePublish, deletePage, setPages } = usePages();
+  const { pages, deleteNode, editNode, togglePublish, deletePage, setPages, isLoading } = usePages();
   const navigate = useNavigate();
 
   const page = pages.find((p) => p.id === id);
@@ -51,9 +53,10 @@ export function PageView() {
     loadNodes();
   }, [page?.id, setPages]);
 
-  const handleDelete = (nodeId: string) => {
-    if (window.confirm('Are you sure you want to delete this node?')) {
-      deleteNode(page!.id, nodeId);
+  const handleDelete = async () => {
+    if (nodeToDelete && page) {
+      await deleteNode(page.id, nodeToDelete.id);
+      setNodeToDelete(null);
     }
   };
 
@@ -67,10 +70,33 @@ export function PageView() {
     }
   };
 
+  if (isLoading) {
+    return (
+        <Container className="mt-5">
+          <div className="text-center py-5">
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading page...</span>
+            </div>
+          </div>
+        </Container>
+    );
+  }
+
+  if (error) {
+    return (
+        <Container className="mt-4">
+          <div className="alert alert-danger" role="alert">{error}</div>
+        </Container>
+    );
+  }
+
   if (!page) {
     return (
         <Container className="mt-4">
-          <div className="alert alert-danger" role="alert">Page not found</div>
+          <div className="alert alert-danger" role="alert">
+            <h4 className="alert-heading mb-2">Page Not Found</h4>
+            <p className="mb-0">The requested page could not be found.</p>
+          </div>
         </Container>
     );
   }
@@ -79,16 +105,14 @@ export function PageView() {
       <div>
         <Navbar bg="light" expand="lg">
           <Container>
-            <div className="text-center w-100 p-2">
+            <div className="text-center w-100 p-2 text-lg-start">
               <h1 className="mb-1">
                 {page.title}
               </h1>
-              <div className="d-flex align-items-center justify-content-center gap-2">
-                <small className="text-muted">ID: {page.id}</small>
-                {page.isPublished && (
-                    <span className="badge bg-success">Published</span>
-                )}
-              </div>
+              <small className="text-muted">{page.id}</small>
+              {/*{page.isPublished && (*/}
+              {/*    <span className="badge bg-success">Published</span>*/}
+              {/*)}*/}
             </div>
             <div className="d-flex flex-wrap justify-content-center gap-2">
               <Button
@@ -163,11 +187,6 @@ export function PageView() {
           </Container>
         </Navbar>
         <Container className="mt-4">
-          {error && (
-              <div className="alert alert-danger mb-4" role="alert">
-                {error}
-              </div>
-          )}
           {isLoadingNodes ? (
               <div className="text-center py-5">
                 <div className="spinner-border text-primary" role="status">
@@ -188,7 +207,7 @@ export function PageView() {
                               index={page.nodes.indexOf(node)}
                               node={node}
                               onEdit={setEditingNode}
-                              onDelete={handleDelete}
+                              onDelete={() => setNodeToDelete(node)}
                               editNode={editNode}
                               pageId={page.id}
                           />
@@ -236,6 +255,12 @@ export function PageView() {
             </Button>
           </Modal.Footer>
         </Modal>
+        <DeleteNodeModal
+            show={!!nodeToDelete}
+            onClose={() => setNodeToDelete(null)}
+            onConfirm={handleDelete}
+            node={nodeToDelete}
+        />
       </div>
   );
 }
