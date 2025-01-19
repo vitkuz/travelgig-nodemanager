@@ -72,7 +72,7 @@ export const api = {
     try {
       const response = await axios.get(`${API_URL}${endpoint}`);
       logApiResponse('GET', endpoint, response);
-      return response.data.map(transformPageData);
+      return response.data.data.map(transformPageData);
     } catch (error) {
       logApiError('GET', endpoint, error);
       throw error;
@@ -90,7 +90,7 @@ export const api = {
     try {
       const response = await axios.post(`${API_URL}${endpoint}`, data);
       logApiResponse('POST', endpoint, response);
-      return transformPageData(response.data);
+      return transformPageData(response.data.data);
     } catch (error) {
       logApiError('POST', endpoint, error);
       throw error;
@@ -103,7 +103,7 @@ export const api = {
     try {
       const response = await axios.get(`${API_URL}${endpoint}`);
       logApiResponse('GET', endpoint, response);
-      return transformPageData(response.data);
+      return transformPageData(response.data.data);
     } catch (error) {
       logApiError('GET', endpoint, error);
       throw error;
@@ -121,7 +121,7 @@ export const api = {
     try {
       const response = await axios.put(`${API_URL}${endpoint}`, data);
       logApiResponse('PUT', endpoint, response);
-      return transformPageData(response.data);
+      return transformPageData(response.data.data);
     } catch (error) {
       logApiError('PUT', endpoint, error);
       throw error;
@@ -147,7 +147,7 @@ export const api = {
     try {
       const response = await axios.get(`${API_URL}${endpoint}`);
       logApiResponse('GET', endpoint, response);
-      return response.data.map(transformNodeData);
+      return response.data.data.map(transformNodeData);
     } catch (error) {
       logApiError('GET', endpoint, error);
       throw error;
@@ -160,7 +160,7 @@ export const api = {
     try {
       const response = await axios.post(`${API_URL}${endpoint}`, node);
       logApiResponse('POST', endpoint, response);
-      return transformNodeData(response.data);
+      return transformNodeData(response.data.data);
     } catch (error) {
       logApiError('POST', endpoint, error);
       throw error;
@@ -188,7 +188,7 @@ export const api = {
     try {
       const response = await axios.put(`${API_URL}${endpoint}`, data);
       logApiResponse('PUT', endpoint, response);
-      return transformNodeData(response.data);
+      return transformNodeData(response.data.data);
     } catch (error) {
       logApiError('PUT', endpoint, error);
       throw error;
